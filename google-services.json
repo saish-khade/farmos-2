@@ -1,0 +1,31 @@
+{
+    "project_info": {
+      "project_number": "494534691505",
+      "project_id": "fir-auth-144d8",
+      "storage_bucket": "fir-auth-144d8.appspot.com"
+
+      
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:494534691505:web:f8a8991157d8053a777090",
+          "android_client_info": {
+            "package_name": "com.farmos.farmos"
+          }
+        },
+        
+        "api_key": [
+          {
+            "current_key": "AIzaSyAt9VKqfmatyXLZzaeQbhofkKfvgjELMt4"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
