@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Alert, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { auth } from '../../firebase';  
+import firebase from '@firebase/app';
 
 
 
@@ -34,14 +35,38 @@ const getEmail = async () => {
 
 
 const CustomSidebarMenu = (props) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState('Farmos');
   const [email, setEmail] = useState('Raju');
+  // const [name, setName] = useState("");
   useEffect(() => {
+    const fetchName = async() => {
+      try {
+        const emx = await getEmail();
+        console.log("Sidebar", emx)
+
+        await firebase.firestore()
+        .collection('user')
+        .where('email', '==', emx )
+        .get()
+        .then((querySnapshot)=> {
+         
+          querySnapshot.forEach(doc => {
+            const {fname, lname} = doc.data();
+            setName(fname + " " + lname)
+          })
+
+        })
+      }
+      catch(e){
+        console.log(e);
+      }
+    }
       /// firstore get users with email 
       getEmail().then(email => {
         
         setEmail(email)
       })
+      fetchName();
   }, [])
  
 
@@ -52,16 +77,17 @@ const CustomSidebarMenu = (props) => {
     
   }
 
+
   return (
     <View style={stylesSidebar.sideMenuContainer}>
       <View style={stylesSidebar.profileHeader}>
         <View style={stylesSidebar.profileHeaderPicCircle}>
           <Text style={{fontSize: 25, color: '#307ecc'}}>
-            {'Manali Shinde'.charAt(0)}
+            {name.charAt(0)}
           </Text>
         </View>
         <Text style={stylesSidebar.profileHeaderText}>
-          {email}
+          {name}
         </Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />

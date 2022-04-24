@@ -53,7 +53,7 @@ const RegisterScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [errortext, setErrortext] = useState('');
 
-  const fisrNameInputRef = createRef();
+  const firstNameInputRef = createRef();
   const lastNameInputRef = createRef();
   const stateInputRef = createRef();
   const zipcodeInputRef = createRef();
@@ -150,11 +150,11 @@ const RegisterScreen = (props) => {
               onChangeText={(UserFirstName) => setUserFirstName(UserFirstName)}
               underlineColorAndroid="#f000"
               placeholder="Enter First Name"
-              placeholderTextColor="#8b9cb5"
+              placeholderTextColor="#85b9cb"
               autoCapitalize="sentences"
               returnKeyType="next"
               onSubmitEditing={() =>
-                lastNameInputRef.current && lastNameInputRef.current.focus()
+                firstNameInputRef.current && firstNameInputRef.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -169,7 +169,7 @@ const RegisterScreen = (props) => {
               autoCapitalize="sentences"
               returnKeyType="next"
               onSubmitEditing={() =>
-                stateInputRef.current && stateInputRef.current.focus()
+                lastNameInputRef.current && lastNameInputRef.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -186,8 +186,8 @@ const RegisterScreen = (props) => {
               autoCapitalize="sentences"
               returnKeyType="next"
               onSubmitEditing={() =>
-                zipcodeInputRef.current &&
-                zipcodeInputRef.current.focus()
+                stateInputRef.current &&
+                stateInputRef.current.focus()
               }
               blurOnSubmit={false}
             />
@@ -252,7 +252,8 @@ const styles = StyleSheet.create({
     marginBottom:20,
     padding:20,
     justifyContent:'center',
-     alignItems:'center'
+     alignItems:'center',
+     display: 'none'
   },
   inputView:{
     marginLeft: 40,

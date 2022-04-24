@@ -12,7 +12,8 @@ import LanguageSetting from "../Screen/DrawerScreens/Setting/LanguageSetting";
 import AccountPrivacy from "../Screen/DrawerScreens/Setting/AccountPrivacy";
 import ChangePassword from "../Screen/DrawerScreens/Setting/ChangePassword";
 import ProfileScreen from "../Screen/ProfileScreen";
-import SchemeScreen from "../Screen/DrawerScreens/SchemeScreen"
+import SchemeScreen from "../Screen/DrawerScreens/SchemeScreen";
+import EditProfileScreen from "../Screen/EditProfileScreen"
 
 
 
@@ -77,6 +78,26 @@ const homeScreenStack = ({navigation}) => {
           component={ProfileScreen}
           options={{
             title: 'Profile', //Set Header Title
+            headerLeft: () => (
+              <NavigationDrawerHeader navigationProps={navigation} />
+            
+            ),
+          }}
+          
+        />
+  
+      </Stack.Navigator>
+    );
+  };
+
+  const EditProfileScreenStack = ({navigation}) => {
+    return (
+      <Stack.Navigator initialRouteName="EditProfileScreen" screenOptions={screenOptionStyle}>
+        <Stack.Screen
+          name="EditProfileScreen"
+          component={EditProfileScreen}
+          options={{
+            title: 'EditProfileScreen', //Set Header Title
             headerLeft: () => (
               <NavigationDrawerHeader navigationProps={navigation} />
             
@@ -247,4 +268,4 @@ const homeScreenStack = ({navigation}) => {
     );
   };
   
-export {SchemeScreenStack, ProfileScreenStack, homeScreenStack, weatherScreenStack, MarketScreenStack, PricePredictionScreenStack,settingScreenStack ,CropCalendarScreenStack};
+export {SchemeScreenStack, ProfileScreenStack, homeScreenStack, weatherScreenStack, MarketScreenStack, PricePredictionScreenStack,settingScreenStack ,CropCalendarScreenStack, EditProfileScreenStack};

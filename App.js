@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 // Example of Splash, Login and Sign Up in React Native
 // https://aboutreact.com/react-native-login-and-signup/
 import 'react-native-gesture-handler';
+import { LogBox } from 'react-native';
 
 // Import React and Component
 import React from 'react';
@@ -19,6 +20,9 @@ import DrawerNavigationRoutes from './Screen/DrawerNavigatorRoutes';
 import WeatherScreen from './Screen/WeatherScreen'
 import HomeScreen from './Screen/DrawerScreens/HomeScreen';
 import { View } from 'react-native';
+import ProfileScreen from './Screen/ProfileScreen';
+import EditProfileScreen from './Screen/EditProfileScreen';
+LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 const Stack = createStackNavigator();
 
 const Auth = () => {
@@ -85,6 +89,18 @@ const App = () => {
         <Stack.Screen
           name="DrawerNavigationRoutes"
           component={DrawerNavigationRoutes}
+          // Hiding header for Navigation Drawer
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          // Hiding header for Navigation Drawer
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfileScreen"
+          component={EditProfileScreen}
           // Hiding header for Navigation Drawer
           options={{headerShown: false}}
         />

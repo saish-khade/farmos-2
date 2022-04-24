@@ -1,4 +1,8 @@
-import React from "react";
+// import React from "react";
+import React, {useState,createRef,useEffect} from "react";
+import { useNavigation } from '@react-navigation/native';
+import firebase from '@firebase/app';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   View,
   Text,
@@ -9,10 +13,92 @@ import {
   Button,
   TouchableOpacity,ScrollView
 } from "react-native";
+import PostComponent from "./Components/PostCard";
 
 // import Emoji from 'react-native-emoji';
+const getEmailFirst = async () => {
+  try {
+    const email = await AsyncStorage.getItem('email');
+    if (email !== null) {
+      // We have data!!
+      console.log(email);
+      return email;
+    }else {
+      return 'saishkhade@gmail.com'
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+}
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
+  // const navigation = useNavigation();
+  const [posts, setallPosts ] = useState([]);
+  const [email,setEmail] = useState("");
+  const [name, setName] = useState("");
+  getEmailFirst().then((em) => {
+    console.log("Email x ,", em)
+    setEmail(em)
+    return
+  })
+  useEffect(() => {
+    const fetchName = async() => {
+      try {
+        const emx = await getEmailFirst();
+        await firebase.firestore()
+        .collection('user')
+        .where('email', '==', emx )
+        .get()
+        .then((querySnapshot)=> {
+         
+          querySnapshot.forEach(doc => {
+            const {fname, lname} = doc.data();
+            setName(fname + " " + lname)
+          })
+
+        })
+      }
+      catch(e){
+        console.log(e);
+      }
+    }
+  
+    const fetchPosts = async() => {
+      try{
+        const list = [];
+        let i=0;
+        // const emx = "t@t.com";
+        const emx = await getEmailFirst();
+        // const email = await getEmailFirst();
+        await firebase.firestore()
+        .collection('posts')
+        .where('email', '==', emx )
+        .get()
+        .then((querySnapshot)=> {
+          console.log('Total Posts: ',querySnapshot.size);
+          querySnapshot.forEach(doc => {
+            const {email, post} = doc.data();
+            list.push({
+              email,
+              post,
+              id:i++
+            });
+          })
+
+        })
+        setallPosts(list);
+
+        console.log('Posts:', list);
+
+      }catch(e){
+        console.log(e);
+      }
+    }
+
+    fetchPosts();
+    fetchName();
+  },[]);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 16 }}>
@@ -33,12 +119,11 @@ const ProfileScreen = () => {
               justifyContent: "space-evenly"
             }}
           >
-            <Image
-              source={require("../assets/crop.jpg")}
-              style={styles.image}
-              resizeMode="cover"
-            />
-            
+          <View style={styles.profileHeaderPicCircle}>
+          <Text style={{fontSize: 65, color: '#307ecc'}}>
+            {name.charAt(0)}
+          </Text>
+        </View>
           </View>
 
           <Text
@@ -46,15 +131,13 @@ const ProfileScreen = () => {
                 textAlign:"center",
                 fontSize:25
             }}
-          >Raju Farmer</Text>
+          >{name}</Text>
           <View style={styles.postFooter}>
-              <TouchableOpacity style={styles.profilebtn} activeOpacity={0.5}>
-                <Text style={{ textAlign: "center" }}> Add Friends</Text>
+              <TouchableOpacity onPress={() => props.navigation.navigate('EditProfileScreen')} style={styles.profilebtn} activeOpacity={0.5}>
+                <Text style={{ textAlign: "center" }}>Edit Profile</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.profilebtn} activeOpacity={0.5}>
-                <Text style={{ textAlign: "center" }}> Message</Text>
-              </TouchableOpacity>
+              
             </View>
           
 
@@ -68,53 +151,42 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        <View>
-          <View className="post" style={styles.post}>
-            <View className="postHeader" style={styles.postHeader}>
-              <Image
-                source={require("../assets/crop.jpg")}
-                style={styles.postImage}
-                resizeMode="cover"
-              />
-              <View>
-                <Text style={styles.postHeaderText}>Hello Farmer</Text>
-                <Text style={styles.postHeaderTextSub}>
-                  Mumbai, Maharashtra
-                </Text>
-              </View>
-            </View>
+        {
+        posts.map((post) => {
+          //console.log("post ")
+          
+          return (
+            
+           <PostComponent email={name} post={post.post} id={post.id} />
+          )
+        })}
 
-            <View style={styles.postBody}>
-            <Text style={styles.postBodyText}>
-                Fertilizing Crops!!!
-              </Text>
-              <Image
-                source={require("../assets/farmer.jpg")}
-                style={{width:"100%",alignItems:'center',
-                  height: 200,
-                  overflow: "hidden",
-                  marginVertical: 5,}}
-                resizeMode="cover"
-              />
-            </View>
 
-            <View style={styles.postFooter}>
-              <TouchableOpacity style={styles.likebtn} activeOpacity={0.5}>
-                <Text style={{ textAlign: "center" }}> 5 Likes</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.likebtn} activeOpacity={0.5}>
-                <Text style={{ textAlign: "center" }}> 5 Dislikes</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+
+  profileHeader: {
+    flexDirection: 'row',
+    backgroundColor: "#2DD0F3",
+    padding: 15,
+    textAlign: 'center',
+  },
+
+  profileHeaderPicCircle: {
+    width: 150,
+    height: 150,
+    borderRadius: 150 / 2,
+    color: 'white',
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop : 20
+  },
   image: {
     width: 160,
     height: 160,

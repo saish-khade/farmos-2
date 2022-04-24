@@ -128,7 +128,7 @@ const RegisterScreen = (props) => {
                 onChangeText={(UserEmail) =>
                   setUserEmail(UserEmail)
                 }
-                placeholder="Enter Email(Optional)" //dummy@abc.com
+                placeholder="Enter Email" //dummy@abc.com
                 underlineColorAndroid="#f000"
                 placeholderTextColor="#8b9cb5"
                 autoCapitalize="none"
